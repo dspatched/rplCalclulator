@@ -1,20 +1,25 @@
 package com.company;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.regex.*;
 
 public class Calculator {
 
-    private double calculate(Double a, Double b, String op) {
+    private Double calculate(Double a, Double b, String op) {
         double result = 0;
         if ("+".equals(op)) result = a + b;
         if ("-".equals(op)) result = a - b;
         if ("*".equals(op)) result = a * b;
-        if ("/".equals(op)) result = a / b;
+        if ("/".equals(op)) {
+            if (b == 0) return null;
+            else result = a / b;
+        }
         return result;
     }
 
-    public Double evaluate (String input) {
+    public String evaluate (String input) {
         CheckIfLegal checkIfLegal = new CheckIfLegal(input);
         if (checkIfLegal.check() == null) return null;
         ConverterToList ctl = new ConverterToList(checkIfLegal.check());
@@ -26,12 +31,15 @@ public class Calculator {
             if (ops.contains(element)) {
                 Double b = stack.pop();
                 Double a = stack.pop();
+                if (calculate(a, b, element) == null) return null;
                 stack.push(calculate(a, b, element));
             } else {
                 stack.push(Double.valueOf(element));
             }
         }
-        return stack.pop();
+        DecimalFormat df = new DecimalFormat("#.####");
+        df.setRoundingMode(RoundingMode.CEILING);
+        return df.format(stack.pop());
     }
 
     private ArrayList<String> convert(ArrayList<String> input) {
