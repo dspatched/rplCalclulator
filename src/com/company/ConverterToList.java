@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class ConverterToList {
 
     private String input;
+    private ArrayList<String> output;
 
     public ConverterToList(String input) {
         this.input = input;
@@ -27,13 +28,14 @@ public class ConverterToList {
             }
             if (i == input.length()-1 && tmp!="") output.add(tmp);
         }
-        return unaryFix(output);
+        this.output = unaryFix(output);
+        this.multipleDotsFix(this.output);
+        return this.output;
     }
 
     private ArrayList<String> unaryFix(ArrayList<String> input) {
         ArrayList<String> fixedOutput = new ArrayList<>();
-        int max = input.size();
-        for (int i = 0; i < max; i++) {
+        for (int i = 0; i < input.size(); i++) {
             String cur = input.get(i);
             if (cur.equals("-")) {
                 if (i == 0 || input.get(i-1).equals("(")) {
@@ -49,5 +51,14 @@ public class ConverterToList {
         return fixedOutput;
     }
 
+    private void multipleDotsFix(ArrayList<String> input) {
+        for (String element : input) {
+            int count = 0;
+            for (int i = 0; i < element.length(); i++) {
+                if (element.charAt(i) == '.') count += 1;
+                if (count > 1) { this.output = null; break; }
+            }
+        }
+    }
 
 }

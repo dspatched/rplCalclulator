@@ -23,7 +23,8 @@ public class Calculator {
         CheckIfLegal checkIfLegal = new CheckIfLegal(input);
         if (checkIfLegal.check() == null) return null;
         ConverterToList ctl = new ConverterToList(checkIfLegal.check());
-        ArrayList<String> converted_input= this.convert(ctl.toList());
+        ArrayList<String> converted_input = this.convert(ctl.toList());
+        if (converted_input == null) return null;
         Stack<Double> stack =  new Stack<>();
         Set<String> ops = new HashSet<>();
         ops.add("+"); ops.add("-"); ops.add("*"); ops.add("/");
@@ -43,14 +44,13 @@ public class Calculator {
     }
 
     private ArrayList<String> convert(ArrayList<String> input) {
+        if (input == null) return null;
         Map<String, Integer> priority = new HashMap<>();
         Stack<String> ops = new Stack<>();
         Queue<String> conv = new LinkedList<>();
         priority.put("(", 0);
-        priority.put("+", 1);
-        priority.put("-", 1);
-        priority.put("*", 2);
-        priority.put("/", 2);
+        priority.put("+", 1); priority.put("-", 1);
+        priority.put("*", 2); priority.put("/", 2);
         for (String i : input) {
             if (i.equals("(")) {
                 ops.push(i);
